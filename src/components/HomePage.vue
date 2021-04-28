@@ -4,18 +4,18 @@
     <div style="margin: 15px 0;"></div>
     <flask-page></flask-page>
     <div style="margin: 15px 0;"></div>
-    <package-page></package-page>
+    <arrange-inventory-page></arrange-inventory-page>
   </div>
 </template>
 
 <script>
 import ShortcutPage from "@/components/ShortcutPage";
 import FlaskPage from "@/components/FlaskPage";
-import PackagePage from "@/components/PackagePage";
+import ArrangeInventoryPage from "@/components/ArrangeInventoryPage";
 
 export default {
   name: "HomePage",
-  components: {PackagePage, FlaskPage, ShortcutPage}
+  components: {ArrangeInventoryPage, FlaskPage, ShortcutPage}
 }
 </script>
 

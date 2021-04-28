@@ -5,7 +5,7 @@ const {exec, spawn} = require('child_process');
 export function registerShortcut(win) {
     globalShortcut.register(`F1`, () => {
 
-        win.loadFile('src/index.html')
+        win.loadURL('http://localhost:8080/')
 
     })
     globalShortcut.register('F2', () => {
@@ -39,6 +39,20 @@ export function registerShortcut(win) {
                 delete global.flask_hwnd
 
             }
+
+
+        })
+    })
+    globalShortcut.register('F5', () => {
+        win.webContents.send('arrange-inventory')
+
+        ipcMain.once('arrange-inventory', (event, args) => {
+            let params = ['arrange-inventory']
+            params.push('-w')
+            params.push(args.width)
+            params.push('-h')
+            params.push(args.height)
+            spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
 
 
         })

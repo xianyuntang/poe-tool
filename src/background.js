@@ -24,7 +24,8 @@ async function createWindow() {
             contextIsolation: false,
             nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
             preload: path.join(__dirname, 'preload.js')
-        }
+        },
+        autoHideMenuBar: true
     })
 
     if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -36,6 +37,7 @@ async function createWindow() {
         // Load the index.html when not in development
         win.loadURL('app://./index.html')
     }
+    win.setMenu(null)
     registerShortcut(win)
 
 }

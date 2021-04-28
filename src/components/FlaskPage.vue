@@ -1,8 +1,7 @@
 <template>
-  <el-card
-  >
+  <el-card>
     <template v-slot:header>
-      <div>喝水快捷 F3 <span v-if="flags.running" class="running">Running!</span></div>
+      <div>自動喝水 F3 <span v-if="flags.running" class="running">執行中!</span></div>
     </template>
     <el-form inline>
       <el-form-item label="按鍵">
@@ -14,7 +13,7 @@
           ></el-checkbox>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="間隔">
+      <el-form-item label="間隔(秒)">
         <el-input-number
             v-model="form.interval"
             :step="0.1"
