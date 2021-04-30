@@ -4,8 +4,13 @@ const {exec, spawn} = require('child_process');
 
 export function registerShortcut(win) {
     globalShortcut.register(`F1`, () => {
+        if(process.env.IS_ELECTRON){
+            win.loadURL('http://127.0.0.1:8080/')
+        }
+        else{
+            win.loadURL('app://./index.html')
+        }
 
-        win.loadURL('http://localhost:8080/')
 
     })
     globalShortcut.register('F2', () => {

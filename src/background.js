@@ -37,7 +37,7 @@ async function createWindow() {
         // Load the index.html when not in development
         win.loadURL('app://./index.html')
     }
-    win.setMenu(null)
+    // win.setMenu(null)
     registerShortcut(win)
 
 }
