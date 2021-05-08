@@ -1,7 +1,17 @@
 <template>
   <el-card>
     <template v-slot:header>
-      <div>自動喝水 F3 <span v-if="flags.running" class="running">執行中!</span></div>
+      <el-row>
+        <el-col :span="4">
+          <div>自動喝水 F3</div>
+          <span v-if="flags.running" class="running">執行中!</span>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" @click="reset" size="mini">重設</el-button>
+        </el-col>
+      </el-row>
+
+
     </template>
     <el-form>
       <el-row
@@ -81,6 +91,19 @@ export default {
       deep: true,
       handler: function (val) {
         localStorage.setItem('flask', JSON.stringify(val))
+      }
+    }
+  },
+  methods: {
+    reset() {
+      this.form = {
+        checkedKeys: [
+          {name: 1, checked: true, interval: 3},
+          {name: 2, checked: true, interval: 3},
+          {name: 3, checked: true, interval: 3},
+          {name: 4, checked: true, interval: 3},
+          {name: 5, checked: true, interval: 3},
+        ]
       }
     }
   }
