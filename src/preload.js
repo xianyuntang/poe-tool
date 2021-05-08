@@ -7,7 +7,6 @@ window.addEventListener('DOMContentLoaded', () => {
         for (const [key, value] of Object.entries(params)) {
             parts.push(`${key}=${value}`)
         }
-        console.log(params)
         window.location.href = `https://poedb.tw/tw/xyz.php?${parts.join('&')}`
     })
 })

@@ -1,26 +1,52 @@
 <template>
   <el-card>
     <template v-slot:header>
-      <div>自動喝水 F3 <span v-if="flags.running" class="running">執行中!</span></div>
+      <el-row>
+        <el-col :span="4">
+          <div>自動喝水 F3</div>
+          <span v-if="flags.running" class="running">執行中!</span>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" @click="reset" size="mini">重設</el-button>
+        </el-col>
+      </el-row>
+
+
     </template>
-    <el-form inline>
-      <el-form-item label="按鍵">
-        <el-checkbox-group v-model="form.checkedKeys">
-          <el-checkbox v-for="key in data.keys"
-                       :key="key"
-                       :label="key"
-                       :value="key"
-          ></el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="間隔(秒)">
-        <el-input-number
-            v-model="form.interval"
-            :step="0.1"
-            :max="8"
-            :min="0.5"
-        ></el-input-number>
-      </el-form-item>
+    <el-form>
+      <el-row
+          v-for="(key,index) in form.checkedKeys"
+          :key="index"
+      >
+        <el-col :span="3">
+          <el-form-item :label="`按鍵${key.name}`">
+
+          </el-form-item>
+
+        </el-col>
+
+        <el-col :span="3">
+          <el-form-item label="啟用">
+            <el-checkbox
+                v-model="key.checked"
+
+            ></el-checkbox>
+          </el-form-item>
+        </el-col>
+        <el-col :span="10">
+          <el-form-item label="間隔(秒)">
+            <el-input-number
+                v-model="key.interval"
+                :step="0.1"
+                :max="8"
+                :min="0.5"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+
+
+      </el-row>
+
 
     </el-form>
 
@@ -37,8 +63,13 @@ export default {
         keys: [1, 2, 3, 4, 5]
       },
       form: {
-        checkedKeys: [1, 2, 3, 4, 5],
-        interval: 3.0
+        checkedKeys: [
+          {name: 1, checked: true, interval: 3},
+          {name: 2, checked: true, interval: 3},
+          {name: 3, checked: true, interval: 3},
+          {name: 4, checked: true, interval: 3},
+          {name: 5, checked: true, interval: 3},
+        ]
       },
       flags: {
         running: false
@@ -60,6 +91,19 @@ export default {
       deep: true,
       handler: function (val) {
         localStorage.setItem('flask', JSON.stringify(val))
+      }
+    }
+  },
+  methods: {
+    reset() {
+      this.form = {
+        checkedKeys: [
+          {name: 1, checked: true, interval: 3},
+          {name: 2, checked: true, interval: 3},
+          {name: 3, checked: true, interval: 3},
+          {name: 4, checked: true, interval: 3},
+          {name: 5, checked: true, interval: 3},
+        ]
       }
     }
   }

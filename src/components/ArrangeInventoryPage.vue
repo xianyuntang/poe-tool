@@ -1,7 +1,15 @@
 <template>
   <el-card>
     <template v-slot:header>
-      <div>自動收包 F5 <span v-if="flags.running" class="running">執行中!</span></div>
+      <el-row>
+        <el-col :span="4">
+          <div>自動喝水 F3</div>
+          <span v-if="flags.running" class="running">執行中!</span>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" @click="reset" size="mini">重設</el-button>
+        </el-col>
+      </el-row>
     </template>
     <el-form inline>
       <el-form-item label="寬">
@@ -52,6 +60,14 @@ export default {
       deep: true,
       handler: function (val) {
         localStorage.setItem('arrange-inventory', JSON.stringify(val))
+      }
+    }
+  },
+  methods: {
+    reset() {
+      this.form = {
+        width: 1920,
+        height: 1080
       }
     }
   }
