@@ -29,29 +29,20 @@ export function registerShortcut(win) {
 
             if (global.flask_hwnd === undefined) {
                 global.flask_hwnd = {}
-                args.checkedKeys.forEach(key => {
-                    if (key.checked) {
-                        let params = ['flask']
+                let params = ['flask']
+                for(let i = 0 ; i< args.checkedKeys.length;i++){
+                    if (args.checkedKeys[i].checked) {
                         params.push('-k')
-                        params.push(key.name)
-                        spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
-                        global.flask_hwnd[key.name] = setInterval(() =>
-                                spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
-                            , key.interval * 1000)
+                        params.push(args.checkedKeys[i].name)
+                        params.push('-i')
+                        params.push(args.checkedKeys[i].interval)
                     }
-
-                })
+                }
+                global.flask_hwnd = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
 
 
             } else {
-                for(let key in global.flask_hwnd){
-                    // eslint-disable-next-line no-prototype-builtins
-                    if(global.flask_hwnd.hasOwnProperty(key)){
-                        clearInterval(global.flask_hwnd[key])
-                    }
-
-                }
-
+                global.flask_hwnd.kill()
                 delete global.flask_hwnd
 
             }
