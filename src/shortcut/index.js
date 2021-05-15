@@ -26,7 +26,7 @@ export function registerShortcut(win) {
     globalShortcut.register('F3', () => {
         win.webContents.send('flask')
         ipcMain.once('flask', (event, args) => {
-
+            console.log(global.flask_hwnd)
             if (global.flask_hwnd === undefined) {
                 global.flask_hwnd = {}
                 let params = ['flask']
@@ -42,6 +42,7 @@ export function registerShortcut(win) {
 
 
             } else {
+
                 global.flask_hwnd.kill()
                 delete global.flask_hwnd
 
