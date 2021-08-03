@@ -30,6 +30,14 @@ export default {
       window.ipcRenderer.send('click-left-button')
     })
   },
+  watch: {
+    form: {
+      deep: true,
+      handler: function (val) {
+        localStorage.setItem('click-left-button', JSON.stringify(val))
+      }
+    }
+  },
   methods: {
     reset() {
       this.form = {

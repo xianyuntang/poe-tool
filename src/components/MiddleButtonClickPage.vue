@@ -27,7 +27,7 @@ export default {
   name: "MiddleButtonClickPage",
   data() {
     return {
-      form:{
+      form: {
         interval: 5,
       },
       flags: {
@@ -43,6 +43,14 @@ export default {
       this.flags.running = !this.flags.running
       window.ipcRenderer.send('click-middle-button', this.form)
     })
+  },
+  watch: {
+    form: {
+      deep: true,
+      handler: function (val) {
+        localStorage.setItem('click-middle-button', JSON.stringify(val))
+      }
+    }
   },
   methods: {
     reset() {
