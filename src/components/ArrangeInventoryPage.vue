@@ -3,7 +3,7 @@
     <template v-slot:header>
       <el-row>
         <el-col :span="4">
-          <div>自動喝水 F3</div>
+          <div>自動收包 F5</div>
           <span v-if="flags.running" class="running">執行中!</span>
         </el-col>
         <el-col :span="4">

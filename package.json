@@ -47,5 +47,16 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "description": "```\r npm install\r ```",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xianyuntang/poe-tool.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xianyuntang/poe-tool/issues"
+  },
+  "homepage": "https://github.com/xianyuntang/poe-tool#readme"
 }

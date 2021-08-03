@@ -6,10 +6,9 @@ global.flask_hwnd = undefined;
 
 export function registerShortcut(win) {
     globalShortcut.register(`F1`, () => {
-        if(process.env.IS_ELECTRON){
+        if (process.env.IS_ELECTRON) {
             win.loadURL('http://127.0.0.1:8080/')
-        }
-        else{
+        } else {
             win.loadURL('app://./index.html')
         }
 
@@ -31,11 +30,10 @@ export function registerShortcut(win) {
     globalShortcut.register('F3', () => {
         win.webContents.send('flask')
         ipcMain.once('flask', (event, args) => {
-            console.log(global.flask_hwnd)
-            if (global.flask_hwnd === undefined) {
-                global.flask_hwnd = {}
+            console.log(global.flaskHWND)
+            if (global.flaskHWND === undefined) {
                 let params = ['flask']
-                for(let i = 0 ; i< args.checkedKeys.length;i++){
+                for (let i = 0; i < args.checkedKeys.length; i++) {
                     if (args.checkedKeys[i].checked) {
                         params.push('-k')
                         params.push(args.checkedKeys[i].name)
@@ -43,17 +41,34 @@ export function registerShortcut(win) {
                         params.push(args.checkedKeys[i].interval)
                     }
                 }
-                global.flask_hwnd = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
+                global.flaskHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
 
 
             } else {
 
-                global.flask_hwnd.kill()
-                delete global.flask_hwnd
+                global.flaskHWND.kill()
+                delete global.flaskHWND
 
             }
 
 
+        })
+    })
+    globalShortcut.register('F4', () => {
+        win.webContents.send('click-middle-button')
+
+        ipcMain.once('click-middle-button', (event, args) => {
+            if (global.ClickMiddleButtonHWND === undefined) {
+                let params = ['click-middle-button']
+                params.push('-i')
+                params.push(args.interval)
+                global.ClickMiddleButtonHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
+
+            } else {
+                global.ClickMiddleButtonHWND.kill()
+                delete global.ClickMiddleButtonHWND
+
+            }
         })
     })
     globalShortcut.register('F5', () => {
@@ -68,6 +83,21 @@ export function registerShortcut(win) {
             spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
 
 
+        })
+    })
+    globalShortcut.register('F6', () => {
+        win.webContents.send('click-left-button')
+
+        ipcMain.once('click-left-button', () => {
+            if (global.ClickLeftButtonHWND === undefined) {
+                let params = ['click-left-button']
+                global.ClickLeftButtonHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
+
+            } else {
+                global.ClickLeftButtonHWND.kill()
+                delete global.ClickLeftButtonHWND
+
+            }
         })
     })
 }
