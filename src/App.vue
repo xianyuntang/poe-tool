@@ -14,5 +14,7 @@ export default {
 </script>
 
 <style>
-
+.running {
+  color: red
+}
 </style>

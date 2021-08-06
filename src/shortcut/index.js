@@ -85,7 +85,7 @@ export function registerShortcut(win) {
 
         })
     })
-    globalShortcut.register('F6', () => {
+    globalShortcut.register('Shift+F6', () => {
         win.webContents.send('click-left-button')
 
         ipcMain.once('click-left-button', () => {

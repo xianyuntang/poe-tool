@@ -112,7 +112,4 @@ export default {
 </script>
 
 <style scoped>
-.running {
-  color: #F56C6C;
-}
 </style>
