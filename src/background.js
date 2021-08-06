@@ -4,6 +4,7 @@ import {app, protocol, BrowserWindow} from 'electron'
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, {VUEJS_DEVTOOLS} from 'electron-devtools-installer'
 import {registerShortcut} from '@/shortcut'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const path = require('path')
 
@@ -15,17 +16,19 @@ protocol.registerSchemesAsPrivileged([
 async function createWindow() {
     // Create the browser window.
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1280,
+        height: 720,
         webPreferences: {
 
             // Use pluginOptions.nodeIntegration, leave this alone
             // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
             contextIsolation: false,
             nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
+            webviewTag: true,
         },
-        autoHideMenuBar: true
+        autoHideMenuBar: true,
+
     })
 
     if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -35,9 +38,10 @@ async function createWindow() {
     } else {
         createProtocol('app')
         // Load the index.html when not in development
-        win.loadURL('app://./index.html')
+        await win.loadURL('app://./index.html')
     }
     // win.setMenu(null)
+
     registerShortcut(win)
 
 }

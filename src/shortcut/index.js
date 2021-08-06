@@ -5,15 +5,6 @@ const {exec, spawn} = require('child_process');
 global.flask_hwnd = undefined;
 
 export function registerShortcut(win) {
-    globalShortcut.register(`F1`, () => {
-        if (process.env.IS_ELECTRON) {
-            win.loadURL('http://127.0.0.1:8080/')
-        } else {
-            win.loadURL('app://./index.html')
-        }
-
-
-    })
     globalShortcut.register('F2', () => {
         exec(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')} copy`, () => {
             const itemInfo = clipboard.readText()
@@ -71,7 +62,7 @@ export function registerShortcut(win) {
             }
         })
     })
-    globalShortcut.register('F5', () => {
+    globalShortcut.register('F6', () => {
         win.webContents.send('arrange-inventory')
 
         ipcMain.once('arrange-inventory', (event, args) => {
@@ -85,7 +76,7 @@ export function registerShortcut(win) {
 
         })
     })
-    globalShortcut.register('Shift+F6', () => {
+    globalShortcut.register('Shift+F7', () => {
         win.webContents.send('click-left-button')
 
         ipcMain.once('click-left-button', () => {

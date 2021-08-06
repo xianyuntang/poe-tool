@@ -10,6 +10,7 @@ module.exports = {
                 productName: "POE小工具",
                 win: {
                     icon: path.resolve(__dirname, 'src/assets/icon.png'),
+                    requestedExecutionLevel: "highestAvailable"
                 },
                 extraFiles:[
                     "extraFiles/robot.exe"

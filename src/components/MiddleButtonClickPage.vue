@@ -2,7 +2,7 @@
   <el-card>
     <template v-slot:header>
       <el-row>
-        <el-col :span="4">
+        <el-col :span="24">
           <div>中鍵連點 F4</div>
           <span v-if="flags.running" class="running">執行中!</span>
         </el-col>
