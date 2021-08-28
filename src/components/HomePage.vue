@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <el-row :gutter="10" type="flex">
       <el-col :span="24">
         <shortcut-page :width="width" :height="height" @updateResolution="handleUpdateResolution"></shortcut-page>

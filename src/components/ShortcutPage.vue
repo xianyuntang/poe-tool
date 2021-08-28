@@ -1,5 +1,7 @@
 <template>
   <el-card header="快捷鍵一覽">
+    <div><el-button type="danger" size="mini" @click="fix">修復版本差異造成的錯誤</el-button></div>
+     <div style="margin: 15px 0;"></div>
     <div>快速查價： F2</div>
     <div>喝水快捷： F3</div>
     <div>自動收包： F6</div>
@@ -64,6 +66,12 @@ export default {
       }
     }
 
+  },
+  methods:{
+    fix(){
+      localStorage.clear()
+      location.reload()
+    }
   }
 }
 </script>
