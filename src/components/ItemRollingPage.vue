@@ -7,6 +7,7 @@
         </el-col>
       </el-row>
     </template>
+    <div>使用的時候，先把滑鼠放到通貨倉庫頁的裝備上，之後直接按下F8就會開始點裝備。</div>
     <el-form>
       <el-form-item label="使用寶石">
         <el-radio-group v-model="form.orb">

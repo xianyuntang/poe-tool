@@ -109,9 +109,7 @@ export function registerShortcut(win) {
                 params.push('-o')
                 params.push(args.orb)
                 global.itemRollingHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
-                global.itemRollingHWND.on('exit', () => {
-                    delete global.itemRollingHWND
-                })
+
             } else {
                 global.itemRollingHWND.kill()
 

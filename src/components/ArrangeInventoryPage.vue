@@ -3,7 +3,7 @@
     <template v-slot:header>
       <el-row>
         <el-col :span="4">
-          <div>自動收包 F8</div>
+          <div>自動收包 F6</div>
 
         </el-col>
         <el-col :span="8">
