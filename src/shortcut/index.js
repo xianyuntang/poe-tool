@@ -61,6 +61,11 @@ export function registerShortcut(win) {
             params.push(args.width)
             params.push('-h')
             params.push(args.height)
+            args.checkList.forEach(item => {
+                    params.push('-s')
+                    params.push(item)
+                }
+            )
             spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
 
 
