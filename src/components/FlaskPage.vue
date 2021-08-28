@@ -2,11 +2,10 @@
   <el-card>
     <template v-slot:header>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="4">
           <div>自動喝水 F3</div>
-          <span v-if="flags.running" class="running">執行中!</span>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-button type="primary" @click="reset" size="mini">重設</el-button>
         </el-col>
       </el-row>

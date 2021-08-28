@@ -14,7 +14,7 @@
     <el-form>
       <el-form-item>
         <el-checkbox-group v-model="form.checkList">
-          <el-row v-for="row in 6" :key="row">
+          <el-row v-for="row in 5" :key="row">
             <el-checkbox v-for="col in 12" :key="col" :label="`${row}-${col}`"></el-checkbox>
           </el-row>
         </el-checkbox-group>
@@ -70,7 +70,7 @@ export default {
   methods: {
     reset() {
       this.form.checkList = []
-      for (let row = 1; row < 7; ++row) {
+      for (let row = 1; row < 6; ++row) {
         for (let col = 1; col < 13; ++col) {
           this.form.checkList.push(`${row}-${col}`)
         }
