@@ -2,31 +2,19 @@
   <el-card>
     <template v-slot:header>
       <el-row>
-        <el-col :span="12">
-          <div>自動收包 F5</div>
-          <span v-if="flags.running" class="running">執行中!</span>
-        </el-col>
-        <el-col :span="12">
-          <el-button type="primary" @click="reset" size="mini">重設</el-button>
+        <el-col :span="24">
+          <div>自動收包 F8</div>
         </el-col>
       </el-row>
     </template>
-    <el-form inline>
-      <el-form-item label="寬">
-        <el-input-number
-            v-model="form.width"
-            :step="10"
-        >
+    <el-form>
+      <el-form-item>
+        <el-checkbox-group v-model="checkList">
+          <el-row v-for="row in 6" :key="row">
+            <el-checkbox v-for="col in 12" :key="col" :label="`${row}-${col}`"></el-checkbox>
+          </el-row>
+        </el-checkbox-group>
 
-        </el-input-number>
-      </el-form-item>
-      <el-form-item label="高">
-        <el-input-number
-            v-model="form.height"
-            :step="10"
-        >
-
-        </el-input-number>
       </el-form-item>
     </el-form>
   </el-card>
@@ -35,42 +23,30 @@
 <script>
 export default {
   name: "ArrangeInventoryPage",
+  props: {
+    width: {
+      type: Number
+    },
+    height: {
+      type: Number
+    }
+  },
   data() {
     return {
-      form: {
-        width: 1920,
-        height: 1080
-      },
-      flags: {
-        running: false
-      }
+      checkList: []
     }
   },
   created() {
-    if (localStorage.getItem('arrange-inventory') != null) {
-      this.form = JSON.parse(localStorage.getItem('arrange-inventory'))
-    }
+
     window.ipcRenderer.on('arrange-inventory', () => {
-      window.ipcRenderer.send('arrange-inventory', this.form)
+      const form = {
+        height: this.height,
+        width: this.width
+      }
+      window.ipcRenderer.send('arrange-inventory', form)
     })
 
   },
-  watch: {
-    form: {
-      deep: true,
-      handler: function (val) {
-        localStorage.setItem('arrange-inventory', JSON.stringify(val))
-      }
-    }
-  },
-  methods: {
-    reset() {
-      this.form = {
-        width: 1920,
-        height: 1080
-      }
-    }
-  }
 }
 </script>
 

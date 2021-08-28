@@ -5,6 +5,7 @@ const {exec, spawn} = require('child_process');
 global.flask_hwnd = undefined;
 
 export function registerShortcut(win) {
+    const configPath = `${path.join(process.cwd(), 'extraFiles', 'setting.yaml')}`
     globalShortcut.register('F2', () => {
         exec(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')} copy`, () => {
             const itemInfo = clipboard.readText()
@@ -21,9 +22,12 @@ export function registerShortcut(win) {
     globalShortcut.register('F3', () => {
         win.webContents.send('flask')
         ipcMain.once('flask', (event, args) => {
-            console.log(global.flaskHWND)
+
             if (global.flaskHWND === undefined) {
-                let params = ['flask']
+                let params = []
+                params.push('-c')
+                params.push(configPath)
+                params.push('flask')
                 for (let i = 0; i < args.checkedKeys.length; i++) {
                     if (args.checkedKeys[i].checked) {
                         params.push('-k')
@@ -45,28 +49,14 @@ export function registerShortcut(win) {
 
         })
     })
-    globalShortcut.register('F4', () => {
-        win.webContents.send('click-middle-button')
-
-        ipcMain.once('click-middle-button', (event, args) => {
-            if (global.ClickMiddleButtonHWND === undefined) {
-                let params = ['click-middle-button']
-                params.push('-i')
-                params.push(args.interval)
-                global.ClickMiddleButtonHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
-
-            } else {
-                global.ClickMiddleButtonHWND.kill()
-                delete global.ClickMiddleButtonHWND
-
-            }
-        })
-    })
     globalShortcut.register('F6', () => {
         win.webContents.send('arrange-inventory')
 
         ipcMain.once('arrange-inventory', (event, args) => {
-            let params = ['arrange-inventory']
+            let params = []
+            params.push('-c')
+            params.push(configPath)
+            params.push('arrange-inventory')
             params.push('-w')
             params.push(args.width)
             params.push('-h')
@@ -80,16 +70,80 @@ export function registerShortcut(win) {
         win.webContents.send('click-left-button')
 
         ipcMain.once('click-left-button', () => {
-            if (global.ClickLeftButtonHWND === undefined) {
+            if (global.clickLeftButtonHWND === undefined) {
                 let params = ['click-left-button']
-                global.ClickLeftButtonHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
+                global.clickLeftButtonHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
 
             } else {
-                global.ClickLeftButtonHWND.kill()
-                delete global.ClickLeftButtonHWND
+                global.clickLeftButtonHWND.kill()
+                delete global.clickLeftButtonHWND
 
             }
         })
     })
+    globalShortcut.register('F8', () => {
+        win.webContents.send('item-rolling')
+
+        ipcMain.once('item-rolling', (event, args) => {
+
+            if (global.itemRollingHWND === undefined) {
+                let params = []
+                params.push('-c')
+                params.push(configPath)
+                params.push('item-rolling')
+                args.keywords.split(',').forEach(item => {
+                    params.push('-k')
+                    params.push(item)
+                })
+                params.push('-m')
+                params.push(args.method)
+                params.push('-w')
+                params.push(args.width)
+                params.push('-h')
+                params.push(args.height)
+                params.push('-o')
+                params.push(args.orb)
+                global.itemRollingHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
+                global.itemRollingHWND.on('exit', () => {
+                    delete global.itemRollingHWND
+                })
+            } else {
+                global.itemRollingHWND.kill()
+
+                delete global.itemRollingHWND
+
+            }
+
+        })
+    })
+    globalShortcut.register('F9', () => {
+        win.webContents.send('headhunter')
+
+        ipcMain.once('headhunter', (event, args) => {
+
+            if (global.headhunterHWND === undefined) {
+                let params = []
+                params.push('-c')
+                params.push(configPath)
+                params.push('headhunter')
+                params.push('-w')
+                params.push(args.width)
+                params.push('-h')
+                params.push(args.height)
+                console.log(params)
+                global.headhunterHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
+                global.headhunterHWND.stderr.on('data', (data) => {
+                    console.log(`stdout: ${data}`);
+                });
+
+            } else {
+                global.headhunterHWND.kill()
+                delete global.headhunterHWND
+
+            }
+
+        })
+    })
+
 }
 

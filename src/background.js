@@ -25,7 +25,7 @@ async function createWindow() {
             contextIsolation: false,
             nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
             preload: path.join(__dirname, 'preload.js'),
-            webviewTag: true,
+            // webviewTag: true,
         },
         autoHideMenuBar: true,
 

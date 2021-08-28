@@ -18,14 +18,19 @@
           v-for="(key,index) in form.checkedKeys"
           :key="index"
       >
-        <el-col :span="3">
+        <el-row>
+          <el-col :span="12">
           <el-form-item :label="`按鍵${key.name}`">
 
           </el-form-item>
 
         </el-col>
 
-        <el-col :span="3">
+
+        </el-row>
+
+        <el-row>
+           <el-col :span="4">
           <el-form-item label="啟用">
             <el-checkbox
                 v-model="key.checked"
@@ -33,7 +38,7 @@
             ></el-checkbox>
           </el-form-item>
         </el-col>
-        <el-col :span="10">
+          <el-col :span="20">
           <el-form-item label="間隔(秒)">
             <el-input-number
                 v-model="key.interval"
@@ -43,6 +48,8 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
+        </el-row>
+
 
 
       </el-row>

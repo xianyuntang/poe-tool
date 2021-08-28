@@ -1,49 +1,15 @@
 <template>
-  <el-card>
-    <template v-slot:header>
-      <el-row>
-        <el-col :span="24">
-          <div>左鍵連點 F6</div>
-          <span v-if="flags.running" class="running">執行中!</span>
-        </el-col>
-      </el-row>
-    </template>
-  </el-card>
+  <div></div>
 </template>
 
 <script>
 export default {
   name: "LeftButtonClickPage",
-  data() {
-    return {
-      flags: {
-        running: false
-      }
-    }
-  },
+
   created() {
-    if (localStorage.getItem('click-left-button') != null) {
-      this.form = JSON.parse(localStorage.getItem('click-left-button'))
-    }
     window.ipcRenderer.on('click-left-button', () => {
-      this.flags.running = !this.flags.running
       window.ipcRenderer.send('click-left-button')
     })
-  },
-  watch: {
-    form: {
-      deep: true,
-      handler: function (val) {
-        localStorage.setItem('click-left-button', JSON.stringify(val))
-      }
-    }
-  },
-  methods: {
-    reset() {
-      this.form = {
-        withShift: true,
-      }
-    }
   }
 }
 </script>
