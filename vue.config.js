@@ -13,8 +13,7 @@ module.exports = {
                     requestedExecutionLevel: "highestAvailable"
                 },
                 extraFiles:[
-                    "extraFiles/robot.exe",
-                    "extraFiles/setting.yaml"
+
                 ]
 
             }

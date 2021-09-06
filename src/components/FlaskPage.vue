@@ -66,15 +66,15 @@ export default {
   data() {
     return {
       data: {
-        keys: [1, 2, 3, 4, 5]
+        keys: ['1', '2', '3', '4', '5']
       },
       form: {
         checkedKeys: [
-          {name: 1, checked: true, interval: 3},
-          {name: 2, checked: true, interval: 3},
-          {name: 3, checked: true, interval: 3},
-          {name: 4, checked: true, interval: 3},
-          {name: 5, checked: true, interval: 3},
+          {name: '1', checked: true, interval: 3},
+          {name: '2', checked: true, interval: 3},
+          {name: '3', checked: true, interval: 3},
+          {name: '4', checked: true, interval: 3},
+          {name: '5', checked: true, interval: 3},
         ]
       },
       flags: {

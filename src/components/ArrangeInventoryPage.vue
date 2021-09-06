@@ -14,8 +14,8 @@
     <el-form>
       <el-form-item>
         <el-checkbox-group v-model="form.checkList">
-          <el-row v-for="row in 5" :key="row">
-            <el-checkbox v-for="col in 12" :key="col" :label="`${row}-${col}`"></el-checkbox>
+          <el-row v-for="y in 5" :key="y">
+            <el-checkbox v-for="x in 12" :key="x" :label="JSON.stringify([x,y])"></el-checkbox>
           </el-row>
         </el-checkbox-group>
 
@@ -70,9 +70,9 @@ export default {
   methods: {
     reset() {
       this.form.checkList = []
-      for (let row = 1; row < 6; ++row) {
-        for (let col = 1; col < 13; ++col) {
-          this.form.checkList.push(`${row}-${col}`)
+      for (let y = 1; y < 6; ++y) {
+        for (let x = 1; x < 13; ++x) {
+          this.form.checkList.push(JSON.stringify([x,y]))
         }
       }
     }

@@ -14,7 +14,6 @@
           <el-radio label="alt">改造</el-radio>
           <el-radio label="chaos">混沌</el-radio>
         </el-radio-group>
-
       </el-form-item>
       <el-form-item label="停止方式">
         <el-radio-group v-model="form.method">

@@ -1,8 +1,14 @@
+import setting from "/src/setting"
+import {keyTap} from "robotjs";
+
 const {globalShortcut, clipboard, ipcMain} = require('electron')
 const path = require('path')
 const {exec, spawn} = require('child_process');
 
-global.flask_hwnd = undefined;
+
+const robot = require('robotjs')
+robot.setMouseDelay(1)
+robot.setKeyboardDelay(1)
 
 export function registerShortcut(win) {
     const configPath = `${path.join(process.cwd(), 'extraFiles', 'setting.yaml')}`
@@ -22,27 +28,24 @@ export function registerShortcut(win) {
     globalShortcut.register('F3', () => {
         win.webContents.send('flask')
         ipcMain.once('flask', (event, args) => {
-
-            if (global.flaskHWND === undefined) {
-                let params = []
-                params.push('-c')
-                params.push(configPath)
-                params.push('flask')
-                for (let i = 0; i < args.checkedKeys.length; i++) {
-                    if (args.checkedKeys[i].checked) {
-                        params.push('-k')
-                        params.push(args.checkedKeys[i].name)
-                        params.push('-i')
-                        params.push(args.checkedKeys[i].interval)
-                    }
-                }
-                global.flaskHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
-
+            if (global.flaskHWNDs === undefined) {
+                global.flaskHWNDs = []
+                console.log(args)
+                args.checkedKeys.forEach(item => {
+                    let hwnd = setInterval(() => {
+                        if (item.checked) {
+                            robot.keyTap(item.name)
+                            console.log(item)
+                        }
+                    }, item.interval * 1000)
+                    global.flaskHWNDs.push(hwnd)
+                })
 
             } else {
-
-                global.flaskHWND.kill()
-                delete global.flaskHWND
+                global.flaskHWNDs.forEach(item => {
+                    clearInterval(item)
+                })
+                global.flaskHWNDs = undefined
 
             }
 
@@ -53,22 +56,21 @@ export function registerShortcut(win) {
         win.webContents.send('arrange-inventory')
 
         ipcMain.once('arrange-inventory', (event, args) => {
-            let params = []
-            params.push('-c')
-            params.push(configPath)
-            params.push('arrange-inventory')
-            params.push('-w')
-            params.push(args.width)
-            params.push('-h')
-            params.push(args.height)
-            args.checkList.forEach(item => {
-                    params.push('-s')
-                    params.push(item)
-                }
-            )
-            spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
 
+            const wRatio = 2560 / args.width
+            const hRatio = 1440 / args.height
+            for (let i = 0; i < args.checkList.length; i++) {
 
+                let point = JSON.parse(args.checkList[i])
+                let xIndex = point[0] - 1
+                let yIndex = point[1] - 1
+                let xPos = (1730 + xIndex * 70) / wRatio
+                let yPos = (815 + yIndex * 70) / hRatio
+                robot.moveMouse(xPos, yPos)
+                robot.keyToggle('control', 'down')
+                robot.mouseClick('left')
+                robot.keyToggle('control', 'up')
+            }
         })
     })
     globalShortcut.register('Shift+F7', () => {
@@ -76,12 +78,13 @@ export function registerShortcut(win) {
 
         ipcMain.once('click-left-button', () => {
             if (global.clickLeftButtonHWND === undefined) {
-                let params = ['click-left-button']
-                global.clickLeftButtonHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
+                global.clickLeftButtonHWND = setInterval(() => {
+                    robot.mouseClick('left')
+                }, 10)
 
             } else {
-                global.clickLeftButtonHWND.kill()
-                delete global.clickLeftButtonHWND
+                clearInterval(global.clickLeftButtonHWND)
+                global.clickLeftButtonHWND = undefined
 
             }
         })
@@ -90,30 +93,62 @@ export function registerShortcut(win) {
         win.webContents.send('item-rolling')
 
         ipcMain.once('item-rolling', (event, args) => {
-
             if (global.itemRollingHWND === undefined) {
-                let params = []
-                params.push('-c')
-                params.push(configPath)
-                params.push('item-rolling')
-                args.keywords.split(',').forEach(item => {
-                    params.push('-k')
-                    params.push(item)
-                })
-                params.push('-m')
-                params.push(args.method)
-                params.push('-w')
-                params.push(args.width)
-                params.push('-h')
-                params.push(args.height)
-                params.push('-o')
-                params.push(args.orb)
-                global.itemRollingHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
+                global.itemRollingHWND = setInterval(() => {
+                    const keywords = args.keywords.split(',')
+                    const targetItem = setting.location.currency['目標']
+                    const wRatio = 2560 / args.width
+                    const hRatio = 1440 / args.height
+                    robot.moveMouse(targetItem.x / wRatio, targetItem.y / hRatio)
+                    robot.keyTap('c', 'control')
+                    const itemDescription = clipboard.readText()
+                    if (args.method === 'or') {
+                        for (let i = 0; i < keywords.length; i++) {
+                            if (itemDescription.includes(keywords[i])) {
+                                clearInterval(global.itemRollingHWND)
+                                global.itemRollingHWND = undefined
+                                return
+                            }
+                        }
+                    } else if (args.method === 'and') {
+
+                        let ok = true
+                        for (let i = 0; i < keywords.length; i++) {
+                            if (!itemDescription.includes(keywords[i])) {
+                                ok = false
+                            }
+                        }
+                        if (ok) {
+                            clearInterval(global.itemRollingHWND)
+                            global.itemRollingHWND = undefined
+                            return
+                        }
+                    }
+                    let orbPoint = setting.location.currency['改造石']
+                    if (args.orb === 'alt') {
+                        orbPoint = setting.location.currency['改造石']
+                    } else if (args.orb === 'chaos') {
+                        orbPoint = setting.location.currency['混沌石']
+
+                    } else {
+                        clearInterval(global.itemRollingHWND)
+                        global.itemRollingHWND = undefined
+                        return
+                    }
+
+                    robot.moveMouse(orbPoint.x / wRatio, orbPoint.y / hRatio)
+                    robot.mouseClick('right')
+                    robot.moveMouse(targetItem.x / wRatio, targetItem.y / hRatio)
+                    robot.mouseClick('left')
+
+
+                }, 100)
+
 
             } else {
-                global.itemRollingHWND.kill()
-
-                delete global.itemRollingHWND
+                clearInterval(global.itemRollingHWND)
+                global.itemRollingHWND = undefined
+                robot.keyToggle('control', 'up')
 
             }
 
@@ -125,22 +160,28 @@ export function registerShortcut(win) {
         ipcMain.once('headhunter', (event, args) => {
 
             if (global.headhunterHWND === undefined) {
-                let params = []
-                params.push('-c')
-                params.push(configPath)
-                params.push('headhunter')
-                params.push('-w')
-                params.push(args.width)
-                params.push('-h')
-                params.push(args.height)
-                console.log(params)
-                global.headhunterHWND = spawn(`${path.join(process.cwd(), 'extraFiles', 'robot.exe')}`, params)
-                global.headhunterHWND.stderr.on('data', (data) => {
-                    console.log(`stdout: ${data}`);
-                });
+                global.headhunterHWND = setInterval(() => {
+                    const wRatio = 2560 / args.width
+                    const hRatio = 1440 / args.height
+
+                    const targetItem = setting.location.currency['目標']
+                    let orbPoint = setting.location.currency['機會石']
+                    robot.moveMouse(orbPoint.x / wRatio, orbPoint.y / hRatio)
+                    robot.mouseClick('right')
+                    robot.moveMouse(targetItem.x / wRatio, targetItem.y / hRatio)
+                    robot.mouseClick('left')
+
+                    orbPoint = setting.location.currency['重鑄石']
+                    robot.moveMouse(orbPoint.x / wRatio, orbPoint.y / hRatio)
+                    robot.mouseClick('right')
+                    robot.moveMouse(targetItem.x / wRatio, targetItem.y / hRatio)
+                    robot.mouseClick('left')
+
+                }, 100)
+
 
             } else {
-                global.headhunterHWND.kill()
+                clearInterval(global.headhunterHWND)
                 delete global.headhunterHWND
 
             }
